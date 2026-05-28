@@ -51,9 +51,16 @@ async def create_users(
    contact : int,
    address : str
 ):
-   
-   users_db.append(users)
-   return {
+
+    user = {
+        "name": name,
+        "email": email,
+        "contact": contact,
+        "address": address
+    }
+
+    users_db.append(user)
+    return {
       "Message : " : "User Created Successfully",
       "User" : {
          "Name of user : " : name,
