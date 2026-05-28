@@ -1,15 +1,12 @@
-from fastapi import FastAPI
 from typing import Optional
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, EmailStr
 
 class User(BaseModel):
-   id:int
-   age:int
-   salary:int
-   category:str
-   min_price:float
-   max_price:float
-   in_stock:bool
+    name: str
+    email: str
+    contact: int
+    address: str
 
 app = FastAPI()
 
@@ -46,6 +43,7 @@ async def get_products(
 
 @app.post("/users")
 async def create_users(
+    id : int,
    name : str,
    email : str,
    contact : int,
@@ -53,6 +51,7 @@ async def create_users(
 ):
 
     user = {
+        "ID" : id,
         "name": name,
         "email": email,
         "contact": contact,
@@ -63,9 +62,42 @@ async def create_users(
     return {
       "Message : " : "User Created Successfully",
       "User" : {
+          "Id is : " : id,
          "Name of user : " : name,
          "Email of user : " : email,
          "phone number : " : contact,
          "nivaas sthaan : " : address
       }
    }
+
+#getting a specific user.
+@app.get("/getuser/{user_id}")
+async def getspecfic_user(user_id : int):
+    for person in users_db:
+        if person["id"] == user_id:
+            return person
+        
+        raise HTTPException(status_code = 404, info = "User not found")
+    
+#get more spefic details
+@app.get("/search")
+async def searching(
+    id : int = None,
+    name  : str =None,
+    age : int = None
+):
+    result = []
+
+    for person in users_db:
+
+        if(
+            (id is None or person["id"] == id) and #if id is not provided , then it ignores the id filtering and same for the name and age.
+            (name is None or person["name"] == name) and
+            (age is None or person["age"] == age)
+        ):
+            result.append(person)
+
+    return{
+        "total count" : len(result),
+        "users" : result
+    }
