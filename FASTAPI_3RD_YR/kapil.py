@@ -102,7 +102,6 @@ async def updateuser(
 raise HTTPException(status_code = 404,detail = "User not found")
         
 
-
 @app.patch("/users/{user_id}")
 async def update_user(
     #here we pass the params that we want to update
