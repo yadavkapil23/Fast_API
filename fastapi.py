@@ -309,3 +309,5 @@ async def get_all_users():
     conn.close()
     
     return {"users": [dict(user) for user in users]}
+
+
