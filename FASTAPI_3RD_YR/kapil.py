@@ -144,6 +144,19 @@ async def full_update_user(user_id: int, user: User):
     raise HTTPException(status_code=404, detail="User not found")
 
 
+@app.delete("/users/{user_id}")
+async def delete_user(user_id: int):
+    for index, person in enumerate(users_db):
+        if person["id"] == user_id:
+            users_db.pop(index)
+            return {
+                "status": "success",
+                "message": f"User {user_id} deleted",
+                "deleted_user_id": user_id
+            }
+    
+    raise HTTPException(status_code=404, detail="User not found")
+
 # so user_id is passed as path param to get user id, and then -  if(person["id"] == user_id): , 
 # here it is used to check the fetched user id to verfiy
 
